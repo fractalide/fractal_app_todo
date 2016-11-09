@@ -9,8 +9,7 @@ buildFractalideContract rec {
     id @0 :UInt64;
     title @1 :Text;
     order @2 :UInt64;
-    completed @3 :bool;
-    url @4 :Text;
+    completed @3 :Bool;
   }
   '';
 
