@@ -13,7 +13,6 @@ component! {
   option(),
   acc(),
   fn run(&mut self) -> Result<()> {
-      println!("Start get_todo");
       let mut ip = self.ports.recv("input")?;
       let reader: request::Reader = ip.get_root()?;
 

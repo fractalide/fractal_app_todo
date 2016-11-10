@@ -6,7 +6,7 @@
    buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-    '${path}:(path="/home/denis/test.db")' -> connect patch(${sqlite_patch})
+    '${path}:(path="${builtins.getEnv "HOME"}/todos.db")' -> connect patch(${sqlite_patch})
     '${generic_text}:(text="todos")' -> option patch()
 
     ip => ip patch()

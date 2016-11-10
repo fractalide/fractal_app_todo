@@ -6,7 +6,7 @@
    buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-    '${path}:(path="/home/denis/test.db")' -> connect get(${sqlite_get})
+    '${path}:(path="${builtins.getEnv "HOME"}/todos.db")' -> connect get(${sqlite_get})
     '${generic_text}:(text="todos")' -> option get()
 
     get => get get()

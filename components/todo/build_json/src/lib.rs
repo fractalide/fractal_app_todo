@@ -27,7 +27,6 @@ component! {
           "order" => todo_reader.get_order(),
           "completed" => todo_reader.get_completed()
       ];
-      println!("build json : {}", inst.dump());
 
       let mut ip = IP::new();
       {

@@ -18,8 +18,6 @@ component! {
       let mut ip_pl = self.ports.recv("playload")?;
       let pl_reader: generic_text::Reader = ip_pl.get_root()?;
 
-      println!("Build response {} : {}", reader.get_number(), pl_reader.get_text()?);
-
       let mut new_ip = IP::new();
       {
           let mut builder: response::Builder = new_ip.init_root();
