@@ -1,4 +1,5 @@
 { stdenv, buildFractalideSubnet, upkeepers
+  , add_req_id
   , build_json
   , build_response
   , get_todo
@@ -15,9 +16,9 @@
    cl_todo() clone[1] -> todo build_json(${build_json})
    insert_todo() response -> id build_json()
 
-   get_todo() req_id -> id build_response(${build_response})
-   build_json() json -> playload build_response()
-   build_response() response => response
+   get_todo() req_id -> id add_req_id(${add_req_id})
+   build_json() json -> playload build_response(${build_response})
+   build_response() response -> response add_req_id() response => response
      '';
 
    meta = with stdenv.lib; {

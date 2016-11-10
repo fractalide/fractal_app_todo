@@ -24,7 +24,7 @@ component! {
   sqlite_read, contracts(generic_text, path)
   inputs(get: generic_text, connect: path),
   inputs_array(),
-  outputs(response: any, error: generic_text),
+  outputs(response: any, error: generic_text, id: generic_text),
   outputs_array(),
   option(generic_text),
   acc(), portal(Portal => Portal::new())
@@ -62,6 +62,8 @@ component! {
           if !ok {
               // There is no IP
               let _ = self.ports.send("error", ip);
+          } else {
+              let _ = self.ports.send("id", ip);
           }
       }
       Ok(())
