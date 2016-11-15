@@ -22,7 +22,7 @@ impl Portal {
 
 component! {
   sqlite_insert, contracts(generic_text, path)
-  inputs(insert: any, connect: path),
+  inputs(insert: any, db_path: path),
   inputs_array(),
   outputs(response: any),
   outputs_array(),
@@ -34,7 +34,7 @@ component! {
           let reader: generic_text::Reader = opt.get_root()?;
           reader.get_text()?
       };
-      if let Ok(mut ip) = self.ports.try_recv("connect") {
+      if let Ok(mut ip) = self.ports.try_recv("db_path") {
           let reader: path::Reader = ip.get_root()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);

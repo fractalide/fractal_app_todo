@@ -6,7 +6,7 @@
    buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-    '${path}:(path="${builtins.getEnv "HOME"}/todos.db")' -> connect insert(${sqlite_insert})
+    db_path => db_path insert(${sqlite_insert})
     '${generic_text}:(text="todos")' -> option insert()
 
     insert => insert insert()

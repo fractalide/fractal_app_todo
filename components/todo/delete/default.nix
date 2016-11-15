@@ -10,6 +10,7 @@
    src = ./.;
    subnet = ''
    input => input id(${get_id})
+   db_path => db_path delete_sql()
    id() id -> delete delete_sql(${local_delete})
    delete_sql() response -> playload build_resp(${build_response})
    id() req_id -> id add_req_id(${add_req_id})

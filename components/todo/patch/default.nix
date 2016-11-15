@@ -13,6 +13,7 @@
    src = ./.;
    subnet = ''
    input => input get_todo(${get_todo})
+   db_path => db_path patch_sql()
 
    get_todo() id -> get get_sql(${local_get})
 

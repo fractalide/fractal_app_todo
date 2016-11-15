@@ -10,6 +10,7 @@
   buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
+   db_path => db_path get_sql()
    input => input id(${get_id}) id -> get get_sql(${local_get})
    get_sql() id -> id build_json(${build_json})
    get_sql() response -> todo build_json()

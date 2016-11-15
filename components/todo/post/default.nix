@@ -10,7 +10,7 @@
   buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-
+   db_path => db_path insert_todo()
    input => input get_todo(${get_todo}) todo -> input cl_todo(${ip_clone})
    cl_todo() clone[0] -> insert insert_todo(${local_insert})
    cl_todo() clone[1] -> todo build_json(${build_json})

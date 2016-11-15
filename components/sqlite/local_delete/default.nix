@@ -6,7 +6,7 @@
    buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-    '${path}:(path="${builtins.getEnv "HOME"}/todos.db")' -> connect delete(${sqlite_delete})
+    db_path => db_path delete(${sqlite_delete})
     '${generic_text}:(text="todos")' -> option delete()
 
     delete => delete delete()
