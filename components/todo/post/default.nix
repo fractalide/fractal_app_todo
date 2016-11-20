@@ -1,24 +1,24 @@
 { stdenv, buildFractalideSubnet, upkeepers
-  , add_req_id
-  , build_json
-  , build_response
-  , get_todo
+  , todo_add_req_id
+  , todo_build_json
+  , todo_build_response
+  , todo_get_todo
   , ip_clone
-  , local_insert
+  , sqlite_local_insert
   ,...}:
 
   buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
    db_path => db_path insert_todo()
-   input => input get_todo(${get_todo}) todo -> input cl_todo(${ip_clone})
-   cl_todo() clone[0] -> insert insert_todo(${local_insert})
-   cl_todo() clone[1] -> todo build_json(${build_json})
-   insert_todo() response -> id build_json()
+   input => input todo_get_todo(${todo_get_todo}) todo -> input cl_todo(${ip_clone})
+   cl_todo() clone[0] -> insert insert_todo(${sqlite_local_insert})
+   cl_todo() clone[1] -> todo todo_build_json(${todo_build_json})
+   insert_todo() response -> id todo_build_json()
 
-   get_todo() req_id -> id add_req_id(${add_req_id})
-   build_json() json -> playload build_response(${build_response})
-   build_response() response -> response add_req_id() response => response
+   todo_get_todo() req_id -> id todo_add_req_id(${todo_add_req_id})
+   todo_build_json() json -> playload todo_build_response(${todo_build_response})
+   todo_build_response() response -> response todo_add_req_id() response => response
      '';
 
    meta = with stdenv.lib; {

@@ -1,20 +1,19 @@
 { stdenv, buildFractalideSubnet, upkeepers
-  , add_req_id
-  , build_json
-  , build_response
-  , get_id
-  , local_delete
+  , todo_add_req_id
+  , todo_build_response
+  , todo_get_id
+  , sqlite_local_delete
   ,...}:
 
   buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-   input => input id(${get_id})
+   input => input id(${todo_get_id})
    db_path => db_path delete_sql()
-   id() id -> delete delete_sql(${local_delete})
-   delete_sql() response -> playload build_resp(${build_response})
-   id() req_id -> id add_req_id(${add_req_id})
-   build_resp() response -> response add_req_id() response => response
+   id() id -> delete delete_sql(${sqlite_local_delete})
+   delete_sql() response -> playload build_resp(${todo_build_response})
+   id() req_id -> id todo_add_req_id(${todo_add_req_id})
+   build_resp() response -> response todo_add_req_id() response => response
      '';
 
    meta = with stdenv.lib; {

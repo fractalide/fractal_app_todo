@@ -1,35 +1,35 @@
 { stdenv, buildFractalideSubnet, upkeepers
-  , add_req_id
-  , build_response
-  , get_todo
+  , todo_add_req_id
+  , todo_build_response
+  , todo_get_todo
   , ip_clone
-  , local_get
-  , local_patch
-  , patch_json
-  , patch_synch
+  , sqlite_local_get
+  , sqlite_local_patch
+  , todo_patch_json
+  , todo_patch_synch
   ,...}:
 
   buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-   input => input get_todo(${get_todo})
+   input => input todo_get_todo(${todo_get_todo})
    db_path => db_path patch_sql()
 
-   get_todo() id -> get get_sql(${local_get})
+   todo_get_todo() id -> get get_sql(${sqlite_local_get})
 
-   synch(${patch_synch})
+   synch(${todo_patch_synch})
 
-   get_sql() response -> todo synch() todo -> old merge(${patch_json})
-   get_todo() raw_todo -> raw_todo synch() raw_todo -> new merge()
+   get_sql() response -> todo synch() todo -> old merge(${todo_patch_json})
+   todo_get_todo() raw_todo -> raw_todo synch() raw_todo -> new merge()
 
-   get_sql() id -> id synch() id -> id patch_sql(${local_patch})
+   get_sql() id -> id synch() id -> id patch_sql(${sqlite_local_patch})
    merge() todo -> ip patch_sql()
 
-   patch_sql() response -> playload build_resp(${build_response})
+   patch_sql() response -> playload build_resp(${todo_build_response})
    get_sql() error -> error synch() error -> error build_resp()
 
-   get_todo() req_id -> id add_req_id(${add_req_id})
-   build_resp() response -> response add_req_id() response => response
+   todo_get_todo() req_id -> id todo_add_req_id(${todo_add_req_id})
+   build_resp() response -> response todo_add_req_id() response => response
      '';
 
    meta = with stdenv.lib; {

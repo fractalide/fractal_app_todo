@@ -9,7 +9,7 @@ buildFractalideComponent rec {
   name = genName ./.;
   src = ./.;
   contracts = [ generic_text todo ];
-  depsSha256 = "1cndzxjqnl370c2iw71cxljvn6gb2kb405j74j7zap84ii2f0xjy";
+  depsSha256 = "13dp69bcradl5ggvfi3hk07wnbhg51d9d0l1f3ykhs6v7fcx17ma";
 
   meta = with stdenv.lib; {
     description = "Component: build a response from a text option";

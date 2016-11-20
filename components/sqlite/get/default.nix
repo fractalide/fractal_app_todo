@@ -13,7 +13,7 @@ buildFractalideComponent rec {
   src = ./.;
   contracts = [ generic_text path ];
   buildInputs = [ sqlite pkgconfig ];
-  depsSha256 = "1j1nxh3vr1nlaz2ayyn689q5lj76w4nwx885wwg4jwflpry8fak2";
+  depsSha256 = "05398m69cq1pb4463h2pdmjz09f83fn3bxq5l6r1azaig933ybqq";
 
   meta = with stdenv.lib; {
     description = "Component: NAND logic gate";
