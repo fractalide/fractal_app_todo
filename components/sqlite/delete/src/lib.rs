@@ -31,11 +31,11 @@ component! {
   fn run(&mut self) -> Result<()> {
       let mut opt = self.recv_option();
       let table = {
-          let reader: generic_text::Reader = opt.get_root()?;
+          let reader: generic_text::Reader = opt.read_contract()?;
           reader.get_text()?
       };
       if let Ok(mut ip) = self.ports.try_recv("db_path") {
-          let reader: path::Reader = ip.get_root()?;
+          let reader: path::Reader = ip.read_contract()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
@@ -43,7 +43,7 @@ component! {
       if let Ok(mut ip) = self.ports.try_recv("delete") {
           if let Some(ref conn) = self.portal.conn {
               {
-                  let reader: generic_text::Reader = ip.get_root()?;
+                  let reader: generic_text::Reader = ip.read_contract()?;
                   let id = reader.get_text()?;
                   let sql = format!("DELETE FROM {} WHERE ID=$1", table);
                   conn.execute(&sql, &[&id])

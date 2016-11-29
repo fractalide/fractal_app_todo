@@ -13,11 +13,11 @@ component! {
   acc(),
   fn run(&mut self) -> Result<()> {
       if let Ok(mut ip) = self.ports.try_recv("playload") {
-          let reader: generic_text::Reader = ip.get_root()?;
+          let reader: generic_text::Reader = ip.read_contract()?;
 
           let mut new_ip = IP::new();
           {
-              let mut builder: response::Builder = new_ip.init_root();
+              let mut builder: response::Builder = new_ip.build_contract();
               builder.set_response(reader.get_text()?);
           }
           self.ports.send("response", new_ip);
@@ -26,7 +26,7 @@ component! {
       if let Ok(mut ip) = self.ports.try_recv("error") {
           let mut new_ip = IP::new();
           {
-              let mut builder: response::Builder = new_ip.init_root();
+              let mut builder: response::Builder = new_ip.build_contract();
               builder.set_response("Not found");
               builder.set_status_code(404);
           }

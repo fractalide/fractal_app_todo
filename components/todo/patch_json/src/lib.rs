@@ -16,10 +16,10 @@ component! {
   fn run(&mut self) -> Result<()> {
       let mut ip = self.ports.recv("old")?;
       {
-          let mut builder = ip.init_root_from_reader::<todo::Builder, todo::Reader>()?;
+          let mut builder = ip.edit_contract::<todo::Builder, todo::Reader>()?;
 
           let mut new_ip = self.ports.recv("new")?;
-          let reader: generic_text::Reader = new_ip.get_root()?;
+          let reader: generic_text::Reader = new_ip.read_contract()?;
 
           let json = json::parse(reader.get_text()?).or(Err(result::Error::Misc("cannot parse".into())))?;
 

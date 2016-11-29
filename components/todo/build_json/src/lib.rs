@@ -15,10 +15,10 @@ component! {
   acc(),
   fn run(&mut self) -> Result<()> {
       let mut ip_id = self.ports.recv("id")?;
-      let reader: generic_text::Reader = ip_id.get_root()?;
+      let reader: generic_text::Reader = ip_id.read_contract()?;
 
       let mut ip_todo = self.ports.recv("todo")?;
-      let todo_reader: todo::Reader = ip_todo.get_root()?;
+      let todo_reader: todo::Reader = ip_todo.read_contract()?;
 
       let id = reader.get_text()?;
       let inst = object![
@@ -30,7 +30,7 @@ component! {
 
       let mut ip = IP::new();
       {
-          let mut builder: generic_text::Builder = ip.init_root();
+          let mut builder: generic_text::Builder = ip.build_contract();
           builder.set_text(&inst.dump());
       }
       self.ports.send("json", ip);

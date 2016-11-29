@@ -13,11 +13,11 @@ component! {
   acc(),
   fn run(&mut self) -> Result<()> {
       let mut ip = self.ports.recv("id")?;
-      let reader: generic_u64::Reader = ip.get_root()?;
+      let reader: generic_u64::Reader = ip.read_contract()?;
 
       let mut ip_pl = self.ports.recv("response")?;
       {
-          let mut builder = ip_pl.init_root_from_reader::<response::Builder, response::Reader>()?;
+          let mut builder = ip_pl.edit_contract::<response::Builder, response::Reader>()?;
           builder.set_id(reader.get_number());
       }
       self.ports.send("response", ip_pl);

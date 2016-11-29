@@ -31,11 +31,11 @@ component! {
   fn run(&mut self) -> Result<()> {
       let mut opt = self.recv_option();
       let table = {
-          let reader: generic_text::Reader = opt.get_root()?;
+          let reader: generic_text::Reader = opt.read_contract()?;
           reader.get_text()?
       };
       if let Ok(mut ip) = self.ports.try_recv("db_path") {
-          let reader: path::Reader = ip.get_root()?;
+          let reader: path::Reader = ip.read_contract()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
@@ -54,7 +54,7 @@ component! {
                   let res = res.or(Err(result::Error::Misc("row error".into())))?;
                   let mut ip = IP::new();
                   {
-                      let mut builder: generic_text::Builder = ip.init_root();
+                      let mut builder: generic_text::Builder = ip.build_contract();
                       let id: i64 = res.get(0);
                       let id: String = format!("{}", id);
                       builder.set_text(&id);
