@@ -1,6 +1,7 @@
-{ pkgs, support, allContracts, allComponents, ... }:
+{ buffet }:
+
 let
-callPackage = pkgs.lib.callPackageWith (pkgs // support // allContracts // allComponents);
+callPackage = buffet.pkgs.lib.callPackageWith (buffet // buffet.support );
 self = rec { # use one line only to insert a component (utils/new_component.py sorts this list)
   todo_add_req_id = callPackage ./todo/add_req_id {};
   todo_build_json = callPackage ./todo/build_json {};
