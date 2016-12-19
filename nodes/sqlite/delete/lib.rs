@@ -1,4 +1,3 @@
-#![feature(question_mark)]
 #[macro_use]
 extern crate rustfbp;
 extern crate capnp;
@@ -21,26 +20,23 @@ impl Portal {
 }
 
 agent! {
-  sqlite_delete, edges(generic_text, path)
-  inputs(delete: generic_text, db_path: path),
-  inputs_array(),
-  outputs(response: any),
-  outputs_array(),
+  input(delete: generic_text, db_path: path),
+  output(response: any),
+  portal(Portal => Portal::new()),
   option(generic_text),
-  acc(), portal(Portal => Portal::new())
-  fn run(&mut self) -> Result<()> {
+  fn run(&mut self) -> Result<Signal> {
       let mut opt = self.recv_option();
       let table = {
           let reader: generic_text::Reader = opt.read_schema()?;
           reader.get_text()?
       };
-      if let Ok(mut ip) = self.ports.try_recv("db_path") {
+      if let Ok(mut ip) = self.input.db_path.try_recv() {
           let reader: path::Reader = ip.read_schema()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
 
-      if let Ok(mut ip) = self.ports.try_recv("delete") {
+      if let Ok(mut ip) = self.input.delete.try_recv() {
           if let Some(ref conn) = self.portal.conn {
               {
                   let reader: generic_text::Reader = ip.read_schema()?;
@@ -49,9 +45,9 @@ agent! {
                   conn.execute(&sql, &[&id])
                       .or(Err(result::Error::Misc("cannot delete".into())))?;
               }
-              self.ports.send("response", ip)?;
+              self.output.response.send(ip)?;
           }
       }
-      Ok(())
+      Ok(End)
   }
 }

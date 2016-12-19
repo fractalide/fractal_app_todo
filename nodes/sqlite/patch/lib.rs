@@ -1,4 +1,3 @@
-#![feature(question_mark)]
 #[macro_use]
 extern crate rustfbp;
 extern crate capnp;
@@ -21,27 +20,24 @@ impl Portal {
 }
 
 agent! {
-  sqlite_insert, edges(generic_text, path)
-  inputs(ip: any, id: generic_text, db_path: path),
-  inputs_array(),
-  outputs(response: any),
-  outputs_array(),
+  input(msg: any, id: generic_text, db_path: path),
+  output(response: any),
+  portal(Portal => Portal::new()),
   option(generic_text),
-  acc(), portal(Portal => Portal::new())
-  fn run(&mut self) -> Result<()> {
+  fn run(&mut self) -> Result<Signal> {
       let mut opt = self.recv_option();
       let table = {
           let reader: generic_text::Reader = opt.read_schema()?;
           reader.get_text()?
       };
-      if let Ok(mut ip) = self.ports.try_recv("db_path") {
+      if let Ok(mut ip) = self.input.db_path.try_recv() {
           let reader: path::Reader = ip.read_schema()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
 
-      if let Ok(ip) = self.ports.try_recv("ip") {
-          let mut id_ip = self.ports.recv("id")?;
+      if let Ok(ip) = self.input.msg.try_recv() {
+          let mut id_ip = self.input.id.recv()?;
           let id = {
               let r: generic_text::Reader = id_ip.read_schema()?;
               r.get_text()?
@@ -50,9 +46,9 @@ agent! {
               let sql = format!("UPDATE {} SET IP=$1 WHERE ID=$2", table);
               conn.execute(&sql, &[&ip.vec, &id])
                   .or(Err(result::Error::Misc("cannot execute".into())))?;
-              self.ports.send("response", ip)?;
+              self.output.response.send(ip)?;
           }
       }
-      Ok(())
+      Ok(End)
   }
 }

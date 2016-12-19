@@ -1,48 +1,42 @@
-#![feature(question_mark)]
 #[macro_use]
 extern crate rustfbp;
 extern crate capnp;
 extern crate json;
 
 agent! {
-  todo_get_todo, edges(generic_text, request, generic_u64, todo)
-  inputs(input: request),
-  inputs_array(),
-  outputs(req_id: generic_u64, id: generic_text, todo: todo, raw_todo: generic_text),
-  outputs_array(),
-  option(),
-  acc(),
-  fn run(&mut self) -> Result<()> {
-      let mut ip = self.ports.recv("input")?;
-      let reader: request::Reader = ip.read_schema()?;
+  input(input: request),
+  output(req_id: generic_u64, id: generic_text, todo: todo, raw_todo: generic_text),
+  fn run(&mut self) -> Result<Signal> {
+      let mut msg = self.input.input.recv()?;
+      let reader: request::Reader = msg.read_schema()?;
 
-      let mut new_ip = IP::new();
+      let mut new_msg = Msg::new();
       {
-          let mut builder: generic_text::Builder = new_ip.build_schema();
+          let mut builder: generic_text::Builder = new_msg.build_schema();
           let url = reader.get_url()?;
           if let Some(ref id) = url.split("/").last() {
               builder.set_text(id);
           }
       }
-      let _ = self.ports.send("id", new_ip);
+      let _ = self.output.id.send(new_msg);
 
-      let mut new_ip = IP::new();
+      let mut new_msg = Msg::new();
       {
-          let mut builder: generic_u64::Builder = new_ip.build_schema();
+          let mut builder: generic_u64::Builder = new_msg.build_schema();
           builder.set_number(reader.get_id());
       }
-      let _ = self.ports.send("req_id", new_ip);
+      let _ = self.output.req_id.send(new_msg);
 
-      let mut new_ip = IP::new();
+      let mut new_msg = Msg::new();
       {
-          let mut builder: generic_text::Builder = new_ip.build_schema();
+          let mut builder: generic_text::Builder = new_msg.build_schema();
           builder.set_text(reader.get_content()?);
       }
-      let _ = self.ports.send("raw_todo", new_ip);
+      let _ = self.output.raw_todo.send(new_msg);
 
-      let mut new_ip = IP::new();
+      let mut new_msg = Msg::new();
       {
-          let mut builder: todo::Builder = new_ip.build_schema();
+          let mut builder: todo::Builder = new_msg.build_schema();
           let json = reader.get_content()?;
           let json = json::parse(json).or(Err(result::Error::Misc("cannot parse json".into())))?;
 
@@ -69,9 +63,8 @@ agent! {
           } else {
               builder.set_completed(json["completed"].as_bool().ok_or(result::Error::Misc("Completed is not a bool)".into()))?);
           }
-
       }
-      let _ = self.ports.send("todo", new_ip);
-      Ok(())
+      let _ = self.output.todo.send(new_msg);
+      Ok(End)
   }
 }

@@ -1,4 +1,3 @@
-#![feature(question_mark)]
 #[macro_use]
 extern crate rustfbp;
 extern crate capnp;
@@ -21,29 +20,26 @@ impl Portal {
 }
 
 agent! {
-  sqlite_read, edges(generic_text, path)
-  inputs(get: generic_text, db_path: path),
-  inputs_array(),
-  outputs(response: any, error: generic_text, id: generic_text),
-  outputs_array(),
+  input(get: generic_text, db_path: path),
+  output(response: any, error: generic_text, id: generic_text),
+  portal(Portal => Portal::new()),
   option(generic_text),
-  acc(), portal(Portal => Portal::new())
-  fn run(&mut self) -> Result<()> {
+  fn run(&mut self) -> Result<Signal> {
       let mut opt = self.recv_option();
       let table = {
           let reader: generic_text::Reader = opt.read_schema()?;
           reader.get_text()?
       };
-      if let Ok(mut ip) = self.ports.try_recv("db_path") {
-          let reader: path::Reader = ip.read_schema()?;
+      if let Ok(mut msg) = self.input.db_path.try_recv() {
+          let reader: path::Reader = msg.read_schema()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
 
-      if let Ok(mut ip) = self.ports.try_recv("get") {
+      if let Ok(mut msg) = self.input.get.try_recv() {
           let mut ok = false;
           if let Some(ref conn) = self.portal.conn {
-              let reader: generic_text::Reader = ip.read_schema()?;
+              let reader: generic_text::Reader = msg.read_schema()?;
               let sql = format!("SELECT ip FROM {} WHERE ID=$1", table);
               let mut stmt = conn.prepare(&sql)
                   .or(Err(result::Error::Misc("cannot prepare".into())))?;
@@ -53,19 +49,19 @@ agent! {
               if let Some(res) = rows.next() {
                   // there is an IP
                   let res = res.or(Err(result::Error::Misc("row error".into())))?;
-                  let mut ip = IP::new();
-                  ip.vec = res.get(0);
-                  self.ports.send("response", ip)?;
+                  let mut msg = Msg::new();
+                  msg.vec = res.get(0);
+                  self.output.response.send(msg)?;
                   ok = true;
               }
           }
           if !ok {
-              // There is no IP
-              let _ = self.ports.send("error", ip);
+              // There is no Msg
+              let _ = self.output.error.send(msg);
           } else {
-              let _ = self.ports.send("id", ip);
+              let _ = self.output.id.send(msg);
           }
       }
-      Ok(())
+      Ok(End)
   }
 }
