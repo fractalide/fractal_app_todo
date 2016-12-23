@@ -4,7 +4,7 @@ subgraph {
   src = ./.;
   flowscript = with nodes; with edges; ''
   db_path => db_path insert_todo()
-  input => input todo_get_todo(${todo_get_todo}) todo -> input cl_todo(${ip_clone})
+  input => input todo_get_todo(${todo_get_todo}) todo -> input cl_todo(${msg_clone})
   cl_todo() clone[0] -> insert insert_todo(${sqlite_local_insert})
   cl_todo() clone[1] -> todo todo_build_json(${todo_build_json})
   insert_todo() response -> id todo_build_json()
