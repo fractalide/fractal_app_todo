@@ -3,11 +3,11 @@ extern crate rustfbp;
 extern crate capnp;
 
 agent! {
-  input(playload: generic_text, error: generic_text),
+  input(playload: prim_text, error: prim_text),
   output(response: response),
   fn run(&mut self) -> Result<Signal> {
       if let Ok(mut msg) = self.input.playload.try_recv() {
-          let reader: generic_text::Reader = msg.read_schema()?;
+          let reader: prim_text::Reader = msg.read_schema()?;
 
           let mut new_msg = Msg::new();
           {

@@ -4,7 +4,7 @@ extern crate capnp;
 extern crate json;
 
 agent! {
-  input(old: todo, new: generic_text),
+  input(old: todo, new: prim_text),
   output(todo: todo),
   fn run(&mut self) -> Result<Signal> {
       let mut msg = self.input.old.recv()?;
@@ -12,7 +12,7 @@ agent! {
           let mut builder = msg.edit_schema::<todo::Builder, todo::Reader>()?;
 
           let mut new_msg = self.input.new.recv()?;
-          let reader: generic_text::Reader = new_msg.read_schema()?;
+          let reader: prim_text::Reader = new_msg.read_schema()?;
 
           let json = json::parse(reader.get_text()?).or(Err(result::Error::Misc("cannot parse".into())))?;
 

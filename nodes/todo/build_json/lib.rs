@@ -5,11 +5,11 @@ extern crate capnp;
 extern crate json;
 
 agent! {
-  input(id: generic_text, todo: todo),
-  output(json: generic_text),
+  input(id: prim_text, todo: todo),
+  output(json: prim_text),
   fn run(&mut self) -> Result<Signal> {
       let mut msg_id = self.input.id.recv()?;
-      let reader: generic_text::Reader = msg_id.read_schema()?;
+      let reader: prim_text::Reader = msg_id.read_schema()?;
 
       let mut msg_todo = self.input.todo.recv()?;
       let todo_reader: todo::Reader = msg_todo.read_schema()?;
@@ -24,7 +24,7 @@ agent! {
 
       let mut msg = Msg::new();
       {
-          let mut builder: generic_text::Builder = msg.build_schema();
+          let mut builder: prim_text::Builder = msg.build_schema();
           builder.set_text(&inst.dump());
       }
       self.output.json.send(msg);

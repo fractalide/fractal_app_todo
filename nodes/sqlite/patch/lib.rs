@@ -20,26 +20,26 @@ impl Portal {
 }
 
 agent! {
-  input(msg: any, id: generic_text, db_path: path),
+  input(msg: any, id: prim_text, db_path: fs_path),
   output(response: any),
   portal(Portal => Portal::new()),
-  option(generic_text),
+  option(prim_text),
   fn run(&mut self) -> Result<Signal> {
       let mut opt = self.recv_option();
       let table = {
-          let reader: generic_text::Reader = opt.read_schema()?;
+          let reader: prim_text::Reader = opt.read_schema()?;
           reader.get_text()?
       };
       if let Ok(mut ip) = self.input.db_path.try_recv() {
-          let reader: path::Reader = ip.read_schema()?;
-          let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
+          let reader: fs_path::Reader = ip.read_schema()?;
+          let conn = Connection::open(Path::new(reader.get_path()?.get_text()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
 
       if let Ok(ip) = self.input.msg.try_recv() {
           let mut id_ip = self.input.id.recv()?;
           let id = {
-              let r: generic_text::Reader = id_ip.read_schema()?;
+              let r: prim_text::Reader = id_ip.read_schema()?;
               r.get_text()?
           };
           if let Some(ref conn) = self.portal.conn {
