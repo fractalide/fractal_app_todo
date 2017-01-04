@@ -4,12 +4,12 @@ extern crate capnp;
 extern crate json;
 
 agent! {
-  input(old: todo, new: prim_text),
-  output(todo: todo),
+  input(old: app_todo, new: prim_text),
+  output(todo: app_todo),
   fn run(&mut self) -> Result<Signal> {
       let mut msg = self.input.old.recv()?;
       {
-          let mut builder = msg.edit_schema::<todo::Builder, todo::Reader>()?;
+          let mut builder = msg.edit_schema::<app_todo::Builder, app_todo::Reader>()?;
 
           let mut new_msg = self.input.new.recv()?;
           let reader: prim_text::Reader = new_msg.read_schema()?;

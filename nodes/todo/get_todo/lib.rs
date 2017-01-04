@@ -4,11 +4,11 @@ extern crate capnp;
 extern crate json;
 
 agent! {
-  input(input: request),
-  output(req_id: prim_u64, id: prim_text, todo: todo, raw_todo: prim_text),
+  input(input: net_http_request),
+  output(req_id: prim_u64, id: prim_text, todo: app_todo, raw_todo: prim_text),
   fn run(&mut self) -> Result<Signal> {
       let mut msg = self.input.input.recv()?;
-      let reader: request::Reader = msg.read_schema()?;
+      let reader: net_http_request::Reader = msg.read_schema()?;
 
       let mut new_msg = Msg::new();
       {
@@ -36,7 +36,7 @@ agent! {
 
       let mut new_msg = Msg::new();
       {
-          let mut builder: todo::Builder = new_msg.build_schema();
+          let mut builder: app_todo::Builder = new_msg.build_schema();
           let json = reader.get_content()?;
           let json = json::parse(json).or(Err(result::Error::Misc("cannot parse json".into())))?;
 

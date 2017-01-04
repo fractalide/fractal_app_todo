@@ -32,7 +32,7 @@ agent! {
       };
       if let Ok(mut msg) = self.input.db_path.try_recv() {
           let reader: fs_path::Reader = msg.read_schema()?;
-          let conn = Connection::open(Path::new(reader.get_path()?.get_text()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
+          let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
           self.portal.conn = Some(conn);
       }
 

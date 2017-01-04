@@ -3,11 +3,11 @@ extern crate rustfbp;
 extern crate capnp;
 
 agent! {
-  input(input: request),
+  input(input: net_http_request),
   output(req_id: prim_u64, id: prim_text),
   fn run(&mut self) -> Result<Signal> {
       let mut msg = self.input.input.recv()?;
-      let reader: request::Reader = msg.read_schema()?;
+      let reader: net_http_request::Reader = msg.read_schema()?;
 
       let mut new_msg = Msg::new();
       {
