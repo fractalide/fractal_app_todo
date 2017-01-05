@@ -2,7 +2,6 @@
 
 subgraph {
   src = ./.;
-  edges = with edges; [ ];
   flowscript = with nodes; with edges; ''
   input => input id(${todo_get_id})
   db_path => db_path delete_sql()
