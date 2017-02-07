@@ -2,7 +2,7 @@
 
 agent {
   src = ./.;
-  edges = with edges; [ prim_text net_http_edges.net_http_request prim_u64 app_todo ];
+  edges = with edges; [ PrimText NetHttpEdges.NetHttpRequest PrimU64 AppTodo ];
   crates = with crates; [ rustfbp capnp json ];
   osdeps = with pkgs; [];
 }

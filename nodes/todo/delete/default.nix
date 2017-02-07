@@ -1,8 +1,8 @@
-{ subgraph, nodes, edges }:
+{ subgraph, imsgs, nodes, edges }:
 
 subgraph {
   src = ./.;
-  flowscript = with nodes; with edges; ''
+  flowscript = with nodes; ''
   input => input id(${todo_get_id})
   db_path => db_path delete_sql()
   id() id -> delete delete_sql(${sqlite_local_delete})

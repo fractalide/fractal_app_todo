@@ -1,8 +1,8 @@
-{ subgraph, nodes, edges }:
+{ subgraph, imsgs, nodes, edges }:
 
 subgraph {
   src = ./.;
-  flowscript = with nodes; with edges; ''
+  flowscript = with nodes; ''
   input => input todo_get_todo(${todo_get_todo})
   db_path => db_path patch_sql()
 

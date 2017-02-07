@@ -1,10 +1,13 @@
-{ subgraph, nodes, edges }:
+{ subgraph, imsgs, nodes, edges }:
 
-subgraph {
+subgraph rec {
   src = ./.;
-  flowscript = with nodes; with edges; ''
+  imsg = imsgs {
+    edges = with edges; [ PrimText ];
+  };
+  flowscript = with nodes; ''
   db_path => db_path get(${sqlite_get})
-  '${prim_text}:(text="todos")' -> option get()
+  '${imsg}.PrimText:(text="todos")' -> option get()
   get => get get()
   get() response => response
   get() error => error

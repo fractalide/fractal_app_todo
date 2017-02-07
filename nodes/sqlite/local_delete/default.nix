@@ -1,10 +1,13 @@
-{ subgraph, nodes, edges }:
+{ subgraph, imsgs, nodes, edges }:
 
-subgraph {
+subgraph rec {
   src = ./.;
-  flowscript = with nodes; with edges; ''
+  imsg = imsgs {
+    edges = with edges; [ PrimText ];
+  };
+  flowscript = with nodes; ''
   db_path => db_path delete(${sqlite_delete})
-  '${prim_text}:(text="todos")' -> option delete()
+  '${imsg}.PrimText:(text="todos")' -> option delete()
   delete => delete delete()
   delete() response => response
   '';

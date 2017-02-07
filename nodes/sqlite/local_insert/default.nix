@@ -1,10 +1,13 @@
-{ subgraph, nodes, edges }:
+{ subgraph, imsgs, nodes, edges }:
 
-subgraph {
+subgraph rec {
   src = ./.;
-  flowscript = with nodes; with edges; ''
+  imsg = imsgs {
+    edges = with edges; [ PrimText ];
+  };
+  flowscript = with nodes; ''
   db_path => db_path insert(${sqlite_insert})
-  '${prim_text}:(text="todos")' -> option insert()
+  '${imsg}.PrimText:(text="todos")' -> option insert()
   insert => insert insert()
   insert() response => response
   '';
