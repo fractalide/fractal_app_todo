@@ -1,4 +1,4 @@
-{ subgraph, imsgs, nodes, edges }:
+{ subgraph, nodes, edges }:
 
 subgraph {
   src = ./.;

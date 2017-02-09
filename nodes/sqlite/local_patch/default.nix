@@ -1,13 +1,15 @@
-{ subgraph, imsgs, nodes, edges }:
-
-subgraph rec {
-  src = ./.;
-  imsg = imsgs {
-    edges = with edges; [ PrimText ];
+{ subgraph, imsg, nodes, edges }:
+let
+  PrimText = imsg {
+    class = edges.PrimText;
+    text = ''(text="todos")'';
   };
+in
+subgraph {
+  src = ./.;
   flowscript = with nodes; with edges; ''
     db_path => db_path patch(${sqlite_patch})
-    '${imsg}.PrimText:(text="todos")' -> option patch()
+    '${PrimText}' -> option patch()
     msg => msg patch()
     id => id patch()
     patch() response => response
