@@ -7,13 +7,13 @@ use rusqlite::Connection;
 
 use std::path::Path;
 
-pub struct Portal {
+pub struct State {
     conn: Option<Connection>,
 }
 
-impl Portal {
+impl State {
     fn new() -> Self {
-        Portal {
+        State {
             conn: None,
         }
     }
@@ -22,7 +22,7 @@ impl Portal {
 agent! {
   input(insert: any, db_path: fs_path),
   output(response: any),
-  portal(Portal => Portal::new()),
+  state(State => State::new()),
   option(prim_text),
   fn run(&mut self) -> Result<Signal> {
       let mut opt = self.recv_option();
@@ -33,11 +33,11 @@ agent! {
       if let Ok(mut msg) = self.input.db_path.try_recv() {
           let reader: fs_path::Reader = msg.read_schema()?;
           let conn = Connection::open(Path::new(reader.get_path()?)).or(Err(result::Error::Misc("Cannot open the db".into())))?;
-          self.portal.conn = Some(conn);
+          self.state.conn = Some(conn);
       }
 
       if let Ok(msg) = self.input.insert.try_recv() {
-          if let Some(ref conn) = self.portal.conn {
+          if let Some(ref conn) = self.state.conn {
               let sql = format!("INSERT INTO {} (IP) VALUES ($1)", table);
               conn.execute(&sql, &[&msg.vec])
                   .or(Err(result::Error::Misc("cannot execute".into())))?;
