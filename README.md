@@ -1,26 +1,21 @@
-# app_todo_backend
+# Todo application core
 
 ## Project Description:
 
-implement a backend http server to save "todo".
-You must have the sql database in "~/todos.db". A fresh version of it is here: https://gitlab.com/dmichiels/todos_db
+This plugs straight into Fractalide's fractal system. It's used within the workbench, fractal_app_todo_controller and fractal_app_todo_model
 
-### Project Problem:
+## Problem:
 
-... <clear problem description, the cause for this project>
-### Solution:
+No demonstration app
 
-... <describe solution your project has taken>
-### Stability:
+## Solution:
 
-Choose one:
-[Experimental, Stable, Legacy, Deprecate]
+This is one of them
 
-### Build Instructions
-Make sure you have installed [nix](https://nixos.org/nix) installed, most likely your package manage has `nix` available, if not you'll need to compile from source.
-```
-$ NIX_PATH="nixpkgs=https://github.com/NixOS/nixpkgs/archive/125ffff089b6bd360c82cf986d8cc9b17fc2e8ac.tar.gz:fractalide=https://github.com/fractalide/fractalide/archive/master.tar.gz"
-$ git clone git@github.com:fractalide/frac_workbench.git
-$ cd frac_workbench
-$ nix-build
-```
+## Stability Status:
+
+- [x] Raw
+- [ ] Draft
+- [ ] Stable
+- [ ] Deprecated
+- [ ] Legacy
