@@ -1,7 +1,7 @@
 { subgraph, imsg, nodes, edges }:
 let
   PrimText = imsg {
-    class = edges.PrimText;
+    class = edges.capnp.PrimText;
     text = ''(text="todos")'';
   };
 in

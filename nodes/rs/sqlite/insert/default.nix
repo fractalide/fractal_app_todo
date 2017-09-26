@@ -2,7 +2,7 @@
 
 agent {
   src = ./.;
-  edges = with edges; [ PrimText FsPath ];
+  capnp_edges = with edges.capnp; [ PrimText FsPath ];
   mods = with mods.rs; [ rustfbp capnp rusqlite ];
-  osdeps = with pkgs; [ sqlite pkgconfig ];
+  osdeps = with pkgs; [  ];
 }

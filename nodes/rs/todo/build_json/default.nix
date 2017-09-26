@@ -2,7 +2,7 @@
 
 agent {
   src = ./.;
-  edges = with edges; [ PrimText PrimU64 AppTodo ];
+  capnp_edges = with edges.capnp; [ PrimText PrimU64 AppTodo ];
   mods = with mods.rs; [ rustfbp capnp json ];
   osdeps = with pkgs; [];
 }

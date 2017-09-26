@@ -15,7 +15,7 @@ let
   targetNode = (head (attrVals [target.node] target.nodes));
   newBuffet = {
     nodes = recursiveUpdate buffet.nodes fractalNodes;
-    edges = buffet.edges // fractalEdges;
+    edges = recursiveUpdate buffet.edges fractalEdges;
     support = buffet.support;
     imsg = buffet.imsg;
     mods = recursiveUpdate buffet.mods fractalMods;
@@ -33,4 +33,4 @@ let
     executable = true;
   };
 in
-{ nodes = fractalNodes; edges = fractalEdges; test = test; service = ./service.nix; }
+{ nodes = fractalNodes; edges = fractalEdges; test = test; service = ./service.nix; mods = fractalMods; }

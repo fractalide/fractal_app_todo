@@ -1,9 +1,9 @@
 { edge, edges }:
 
-edge {
+edge.capnp {
   src = ./.;
-  edges =  with edges; [];
-  schema = with edges; ''
+  edges =  with edges.capnp; [];
+  schema = with edges.capnp; ''
     struct AppTodo {
       id @0 :UInt64;
       title @1 :Text;

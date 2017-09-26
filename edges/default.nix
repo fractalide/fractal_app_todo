@@ -1,7 +1,4 @@
 { buffet }:
-let
-  callPackage = buffet.pkgs.lib.callPackageWith ( buffet.support // buffet );
-in
-rec {
-  AppTodo = callPackage ./app/todo {};
+{
+  capnp = import ./capnp { inherit buffet; };
 }
